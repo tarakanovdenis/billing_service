@@ -1,0 +1,8 @@
+*.py[cdo]
+
+.venv*
+.env
+
+
+*run.sh
+*.log*

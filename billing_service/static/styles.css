@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+  }
+
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .card {
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+
+  .price {
+    font-size: 2rem;
+    color: #000;
+    margin: 20px 0;
+
+  }
+
+  button {
+    background-color: #323232;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    opacity: 0.8;
+  }
+
+  /* Card color variations */
+  .basic {
+    background-color: #fff;
+  }
+
+  .basic button {
+    background-color: #323232;
+  }
+
+  .standard {
+    background-color: #fff;
+  }
+
+  .standard button {
+    background-color: #323232;
+  }
+
+  .premium {
+    background-color: #fff;
+  }
+
+  .premium button {
+    background-color: #323232;
+  }
