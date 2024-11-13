@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription Payment Form</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Subscription Payment Form</h1>
+    <div class="cards">
+      <!-- One Month Plan -->
+      <div class="card basic">
+        <h2>1 Month</h2>
+        <p class="price">$5</p>
+        <form action="/billing/payment/subscription/create/" method="POST">
+            <input type="hidden" name="number_of_subscription_month" value="1">
+            <input type="hidden" name="amount" value="5">
+            <button type="submit">Pay</button>
+        </form>
+      </div>
+
+      <!-- Standard Plan Card -->
+      <div class="card standard">
+        <h2>3 Months</h2>
+        <p class="price">$10</p>
+        <form action="/billing/payment/subscription/create/" method="POST">
+            <input type="hidden" name="number_of_subscription_month" value="3">
+            <input type="hidden" name="amount" value="10">
+            <button type="submit">Pay</button>
+        </form>
+      </div>
+
+      <!-- Premium Plan Card -->
+      <div class="card premium">
+        <h2>6 Months</h2>
+        <p class="price">$20</p>
+        <form action="/billing/payment/subscription/create/" method="POST">
+            <input type="hidden" name="number_of_subscription_month" value="6">
+            <input type="hidden" name="amount" value="20">
+            <button type="submit">Pay</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

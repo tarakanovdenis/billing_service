@@ -1,0 +1,134 @@
+services:
+  auth_backend:
+    container_name: auth_backend
+    build:
+      context: ./auth/
+    env_file:
+      - ./auth/.env.example
+    volumes:
+      - ./auth/:/opt/app/
+    ports:
+      - 8000:8000
+    networks:
+      - appnet
+    restart: on-failure
+    depends_on:
+      auth_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  auth_db:
+    container_name: auth_db
+    image: postgres:15.7
+    env_file:
+      - ./auth/.env
+    volumes:
+      - $HOME/auth_db/data:/var/lib/postgresql/data
+      - ./auth/alembic/create_partition_table_login_histories.ddl:/create_partition_table_login_histories.ddl:ro
+    ports:
+      - 5432:5432
+    networks:
+      - appnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: on-failure
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - appnet
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=username
+      - RABBITMQ_DEFAULT_PASS=password
+    networks:
+      - appnet
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: on-failure
+
+  notification_service_backend:
+    container_name: notification_service_backend
+    build:
+      context: ./notification_service
+    env_file:
+      - ./notification_service/.env
+    volumes:
+      - ./notification_service/:/opt/app
+    ports:
+      - 8002:8000
+    networks:
+      - appnet
+    restart: on-failure
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  billing_db:
+    container_name: billing_db
+    image: postgres:15.7
+    env_file:
+      - ./billing_service/.env
+    volumes:
+      - $HOME/billing_db/data:/var/lib/postgresql/data
+      # - ./auth/alembic/create_partition_table_login_histories.ddl:/create_partition_table_login_histories.ddl:ro
+    ports:
+      - 5433:5432
+    networks:
+      - appnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: on-failure
+
+  billing_service_backend:
+    container_name: billing_service_backend
+    build:
+      context: ./billing_service
+    env_file:
+      - ./billing_service/.env
+    volumes:
+      - ./billing_service/:/opt/app
+    ports:
+      - 8001:8000
+    networks:
+      - appnet
+    restart: on-failure
+    depends_on:
+      billing_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    hostname: mongodb
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
